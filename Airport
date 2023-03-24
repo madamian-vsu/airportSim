@@ -1,0 +1,11 @@
+package airportSim;
+
+import java.util.*;
+
+public class Airport {
+	private Runway runway;
+
+	public Airport(Runway runway) {
+		this.runway = runway;
+	}
+}
