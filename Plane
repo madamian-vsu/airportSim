@@ -1,0 +1,53 @@
+package airportSim;
+
+import java.util.Random;
+
+public class Plane {
+
+	private String code;
+	private String status; 
+	
+	public Plane(String code, String status) {
+		this.code = code;
+		this.status = status;
+	}
+	
+	public Plane() {
+	this.code = "0000";
+	this.status = "null";
+	}
+	
+	public String getCode() {
+		return code;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String toString() {
+		return "Plane code: " + getCode() + " Status : " + getStatus();
+	}
+	public String generateCode() {
+		String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		int lenght = 4;
+		Random random = new Random();
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < lenght; i ++) {
+			int randomIndex = random.nextInt(characters.length());
+			char randomChar = characters.charAt(randomIndex);
+			sb.append(randomChar);
+		}
+		return sb.toString();
+	}
+	
+}
