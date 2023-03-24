@@ -1,0 +1,17 @@
+package airportSim;
+
+public class SimulationTest {
+
+	public static void main(String[] args) {
+		Runway runway = new Runway();	
+		runway.generatePlanes(3);
+		System.out.println(runway.getAirportQueue());
+		runway.allocatePlanes();
+		System.out.println(runway.getAirportQueue());
+		System.out.println(runway.getLandingQueue());
+		System.out.println(runway.getTakeOffQueue());
+		System.out.println(runway.getEmergencyLandingQueue());
+		
+	}
+
+}
