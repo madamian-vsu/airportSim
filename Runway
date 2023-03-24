@@ -1,0 +1,147 @@
+package airportSim;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Random;
+
+public class Runway {
+	private ArrayList<Plane> runway = new ArrayList<Plane>(1);
+	private Plane currentPlane;
+	private Queue<Plane> landingQueue = new LinkedList<Plane>();
+	private Queue<Plane> takeOffQueue = new LinkedList<Plane>();
+	private Queue<Plane> emergencyLandingQueue = new LinkedList<Plane>();
+	protected Queue<Plane> airportQueue = new LinkedList<Plane>();
+	public Runway() {}
+	
+	public Plane getcurrentPlane() {
+		if (runway.isEmpty()) {
+			System.out.println("No plane on runway");
+		}
+		else {
+			return runway.get(0);
+		}
+		return null;
+	}
+	
+	public Queue<Plane> getAirportQueue(){
+		return airportQueue;
+	}
+	
+	public Queue<Plane> getLandingQueue(){
+		return landingQueue;
+	}
+	
+	public Queue<Plane> getTakeOffQueue(){
+		return takeOffQueue;
+	}
+	
+	public Queue<Plane> getEmergencyLandingQueue(){
+		return emergencyLandingQueue;
+	}
+	
+	public Boolean isFree() {
+		return currentPlane == null;
+	}
+	private void simulateFlight() throws InterruptedException {
+		Thread.sleep(3000);
+		System.out.println("Plane has Departed.");
+	}
+	
+//	public void addPlaneToTakeOffQueue(Plane plane) {
+//		takeOffQueue.add(plane);
+//		System.out.println(plane + " added to landingQueue");
+//	}
+//	
+//	public void addPlaneToLandingQueue(Plane plane) {
+//		landingQueue.add(plane);
+//		System.out.println(plane + " added to landingQueue");
+//	}
+//	
+//	public void addPlaneToEmergencyLandingQueue(Plane plane) {
+//		emergencyLandingQueue.add(plane);
+//		System.out.println(plane + " added to emergency landing queue");
+//	}
+	
+	public void simulateLanding() throws Exception{
+		while (!landingQueue.isEmpty() || !emergencyLandingQueue.isEmpty()) {
+			Plane plane = null;
+			if (!emergencyLandingQueue.isEmpty()) {
+				plane = emergencyLandingQueue.poll();
+				System.out.println("Processing emergency landing for " + plane);
+			}
+			else if (!landingQueue.isEmpty()) {
+				plane = landingQueue.poll();
+				System.out.println("Processing landing for " + plane);
+			}
+			simulateFlight();
+			System.out.println(plane + " has taken landed");
+		}
+	}
+	
+	public void simulateTakeOff() throws Exception{
+		while (!takeOffQueue.isEmpty()) {
+			Plane plane = takeOffQueue.poll();
+			System.out.println("Processing takeoff for " + plane);
+		simulateFlight();
+		System.out.println(plane + " has taken off.");
+		}
+	}
+	
+	public void generatePlanes(int x) {
+		for (int i = 0; i < x; i++) {
+			Plane newPlane = new Plane();
+			int random = (int)(Math.random() * 11);
+			if (random == 0) {
+				newPlane.setCode(newPlane.generateCode());
+				newPlane.setStatus("emergency");
+				airportQueue.add(newPlane);
+			}
+			else if (random < 5 && random > 0) {
+				newPlane.setCode(newPlane.generateCode());
+				newPlane.setStatus("arriving");
+				airportQueue.add(newPlane);
+			}
+			else if (random >= 5) {
+				newPlane.setCode(newPlane.generateCode());
+				newPlane.setStatus("departing");
+				airportQueue.add(newPlane);
+			}
+		}
+	}
+	
+	public void allocatePlanes() {
+		for (int i = 0; i < airportQueue.size()+2; i ++) {
+			if (!airportQueue.isEmpty()) {
+				Plane temp = airportQueue.peek();
+				String status = temp.getStatus();
+				if (status == "arriving") {
+					landingQueue.add(temp);
+					airportQueue.remove();
+				}
+				else if (status == "departing") {
+					takeOffQueue.add(temp);
+					airportQueue.remove();
+				}
+				else if (status == "emergency") {
+					emergencyLandingQueue.add(temp);
+					airportQueue.remove();
+				}
+			}
+		}
+	}
+	
+	public void runwayAccess() {
+		if (!runway.isEmpty()) {
+			System.out.println("Runway is currently unavailable.");
+		}
+		else if (runway.isEmpty() && !emergencyLandingQueue.isEmpty()) {
+			Plane nextUp = emergencyLandingQueue.poll();
+			runway.add(nextUp);
+			
+			
+			
+			
+		}
+	}
+}
